@@ -62,9 +62,10 @@ class $modify(CharacterColorPageExt, CharacterColorPage) {
 		#ifdef GEODE_IS_ANDROID32
 		scene->addChild(GJGarageLayer::node());
 		#endif
-
+		
 		#ifdef GEODE_IS_ANDROID64
 		scene->addChild(oldGarage);
+		this->onClose(nullptr);
 		#endif
 
 		scene->addChild(newChar);
