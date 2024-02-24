@@ -52,6 +52,7 @@ class $modify(CharacterColorPageExt, CharacterColorPage) {
 
 		auto newChar = CharacterColorPage::create();
 		newChar->m_noElasticity = true;
+		this->onClose(nullptr);
 
 		//IT WORKS IM SORRY :SOB:
 		garage->addChild(newChar, 100);
