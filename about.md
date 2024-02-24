@@ -1,3 +1,3 @@
-# Template Mod
+# Icon Randomizer
 
-Edit about.md to change this
+Adds a button in the Color Selection menu to randomize your icons!

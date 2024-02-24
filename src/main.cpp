@@ -1,50 +1,61 @@
 #include <Geode/Geode.hpp>
+#include <Geode/modify/CharacterColorPage.hpp>
 
 using namespace geode::prelude;
 
-/**
- * `$modify` lets you extend and modify GD's classes.
- * To hook a function in Geode, simply $modify the class
- * and write a new function definition with the signature of
- * the function you want to hook.
- *
- * Here we use the overloaded `$modify` macro to set our own class name,
- * so that we can use it for button callbacks.
- *
- * Notice the header being included, you *must* include the header for
- * the class you are modifying, or you will get a compile error.
- */
-#include <Geode/modify/MenuLayer.hpp>
-class $modify(MyMenuLayer, MenuLayer) {
-	/**
-	 * Typically classes in GD are initialized using the `init` function, (though not always!),
-	 * so here we use it to add our own button to the bottom menu.
-	 *
-	 * Note that for all hooks, your signature has to *match exactly*,
-	 * `void init()` would not place a hook!
-	*/
+class $modify(CharacterColorPageExt, CharacterColorPage) {
 	bool init() {
-		if (!MenuLayer::init()) {
+		if(!CharacterColorPage::init())
 			return false;
-		}
 
-		auto myButton = CCMenuItemSpriteExtra::create(
-			CCSprite::createWithSpriteFrameName("GJ_likeBtn_001.png"),
-			this,
-			menu_selector(MyMenuLayer::onMyButton)
-		);
+		CCMenu* buttonsMenu = getChildOfType<CCMenu>(m_mainLayer, 0);
 
-		auto menu = this->getChildByID("bottom-menu");
-		menu->addChild(myButton);
+		ButtonSprite* randomSpr = ButtonSprite::create("Rand", 40, false, "bigFont.fnt", "GJ_button_04.png", 20, 0.4);
+		randomSpr->setScale(0.85);
+		CCMenuItemSpriteExtra* randomButton = CCMenuItemSpriteExtra::create(randomSpr, this, menu_selector(CharacterColorPageExt::onRand));
+		auto col1Btn = getChildOfType<CCMenuItemSpriteExtra>(buttonsMenu, 2);
+		randomButton->setPosition({col1Btn->getPositionX() - 50, col1Btn->getPositionY()});
 
-		myButton->setID("my-button"_spr);
-
-		menu->updateLayout();
-
+		buttonsMenu->addChild(randomButton);
 		return true;
 	}
+	void onRand(CCObject*) {
+		createQuickPopup("Randomize Icons", "Are you sure you want to <cr>randomize</c> your icons?\n<cy>This action cannot be undone.</c>", "No", "Yes",
+		[this](auto, bool btn2) {
+			if(btn2) {
+				randomIcons();
+			}
+		});
+	}
+	void randomIcons() {
+		log::info("randomize icons");
+		GameManager* GM = GameManager::sharedState();
+		srand(time(NULL));
+		GM->setPlayerFrame(std::rand() % 484 + 1);
+		GM->setPlayerShip(std::rand() % 169 + 1);
+		GM->setPlayerBall(std::rand() % 118 + 1);
+		GM->setPlayerBird(std::rand() % 149 + 1);
+		GM->setPlayerDart(std::rand() % 96 + 1);
+		GM->setPlayerRobot(std::rand() % 68 + 1);
+		GM->setPlayerSpider(std::rand() % 69 + 1);
+		GM->setPlayerSwing(std::rand() % 43 + 1);
+		GM->setPlayerJetpack(std::rand() % 5 + 1);
+		GM->setPlayerStreak(std::rand() % 7 + 1);
+		GM->setPlayerShipStreak(std::rand() % 6 + 1);
+		GM->setPlayerDeathEffect(std::rand() % 20 + 1);
+		GM->setPlayerColor(std::rand() % 106 + 1);
+		GM->setPlayerColor2(std::rand() % 106 + 1);
+		GM->setPlayerColor3(std::rand() % 106 + 1);
+		GM->setPlayerGlow(std::rand() % 2); 
 
-	void onMyButton(CCObject*) {
-		FLAlertLayer::create("Geode", "Hello from my custom mod!", "OK")->show();
+
+		auto newChar = CharacterColorPage::create();
+		newChar->m_noElasticity = true;
+
+		auto scene = CCScene::create();
+
+		scene->addChild(GJGarageLayer::node());
+		scene->addChild(newChar);
+		CCDirector::sharedDirector()->pushScene(scene); //IT WORKS IM SORRY :SOB:
 	}
 };

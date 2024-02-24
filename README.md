@@ -1,3 +1,3 @@
-# iconrandomizer
+# Icon Randomizer
 
-This is where she makes a mod.
+Adds a button in the Color Selection menu to randomize your icons!
