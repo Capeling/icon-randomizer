@@ -48,27 +48,12 @@ class $modify(CharacterColorPageExt, CharacterColorPage) {
 		GM->setPlayerColor3(std::rand() % 106 + 1);
 		GM->setPlayerGlow(std::rand() % 2); 
 
-		auto oldGarage = (GJGarageLayer*)this->getParent();
+		auto garage = (GJGarageLayer*)this->getParent();
 
 		auto newChar = CharacterColorPage::create();
 		newChar->m_noElasticity = true;
 
-		auto scene = CCScene::create();
-
-		#ifdef GEODE_IS_WINDOWS
-		scene->addChild(GJGarageLayer::node());
-		#endif
-
-		#ifdef GEODE_IS_ANDROID32
-		scene->addChild(GJGarageLayer::node());
-		#endif
-		
-		#ifdef GEODE_IS_ANDROID64
-		scene->addChild(oldGarage);
-		this->onClose(nullptr);
-		#endif
-
-		scene->addChild(newChar);
-		CCDirector::sharedDirector()->pushScene(scene); //IT WORKS IM SORRY :SOB:
+		//IT WORKS IM SORRY :SOB:
+		garage->addChild(newChar, 100);
 	}
 };
